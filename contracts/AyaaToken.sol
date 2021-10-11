@@ -1,16 +1,20 @@
-//SPDX-License-Identifier: Unlicense
+//SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 contract AyaaToken {
-  string NAME = "Ayaa Token";
-  string SYMBOL = "AYAA";
+  string private _name;
+  string private _symbol;
 
+  uint256 private _totalSupply;
   mapping(address => uint256) balances;
-  address deployer;
+  address owner;
 
   constructor() {
-    deployer = msg.sender;
-    balances[deployer] = 1000000 * 1e8;
+    owner = msg.sender;
+    _name = "Ayaa Token";
+    _symbol = "AYAA";
+    _totalSupply = 10000000 * 1e18;
+    balances[owner] = 1000000 * 1e18;
   }
 
   event Transfer(address indexed _from, address indexed _to, uint256 _value);
@@ -21,19 +25,19 @@ contract AyaaToken {
   );
 
   function name() public view returns (string memory) {
-    return NAME;
+    return _name;
   }
 
   function symbol() public view returns (string memory) {
-    return SYMBOL;
+    return _symbol;
   }
 
   function decimals() public view returns (uint8) {
-    return 8;
+    return 18;
   }
 
   function totalSupply() public view returns (uint256) {
-    return 10000000 * 1e8;
+    return 10000000 * 1e18;
   }
 
   function balanceOf(address _owner) public view returns (uint256 balance) {
@@ -87,7 +91,7 @@ contract AyaaToken {
   }
 
   mapping(uint256 => bool) blockMined;
-  uint256 totalMinted = 1000000 * 1e8; //1M that has been minted to the deployer in constructor()
+  uint256 totalMinted = 1000000 * 1e18; //1M that has been minted to the deployer in constructor()
 
   function mine() public returns (bool success) {
     if (blockMined[block.number]) {
@@ -99,10 +103,10 @@ contract AyaaToken {
       return false;
     }
 
-    require(totalMinted + 10 * 1e8 < totalSupply());
+    require(totalMinted + 10 * 1e18 < totalSupply());
 
-    balances[msg.sender] = balances[msg.sender] + 10 * 1e8;
-    totalMinted = totalMinted + 10 * 1e8;
+    balances[msg.sender] = balances[msg.sender] + 10 * 1e18;
+    totalMinted = totalMinted + 10 * 1e18;
     blockMined[block.number] = true;
 
     return true;
